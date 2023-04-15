@@ -54,6 +54,9 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation 'androidx.compose.material:material:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -68,4 +71,12 @@ dependencies {
     implementation("org.orbit-mvi:orbit-core:4.6.1")
     implementation("org.orbit-mvi:orbit-viewmodel:4.6.1")
     implementation("org.orbit-mvi:orbit-compose:4.6.1")
+
+    implementation "com.github.Team-B1ND:dauth-android:1.0.5"
+
+    // lottie
+    implementation "com.airbnb.android:lottie-compose:6.0.0"
+
+    // dui
+    implementation 'com.github.Team-B1ND:dui-android:1.0.4'
 }

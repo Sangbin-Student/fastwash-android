@@ -25,9 +25,10 @@ import com.mooooong.fastwash.features.main.mvi.MainSideEffect
 import com.mooooong.fastwash.features.main.mvi.MainState
 import com.mooooong.fastwash.features.main.vm.MainViewModel
 import com.mooooong.fastwash.ui.theme.FastwashTheme
+import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()

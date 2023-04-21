@@ -5,11 +5,13 @@ import com.mooooong.fastwash.features.main.mvi.MainSideEffect
 import com.mooooong.fastwash.features.main.mvi.MainState
 import com.mooooong.fastwash.network.RetrofitClient
 import com.mooooong.fastwash.network.request.AssignBluetoothIdRequest
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.viewmodel.container
 
+@HiltViewModel
 class MainViewModel : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
     override val container = container<MainState, MainSideEffect>(MainState())

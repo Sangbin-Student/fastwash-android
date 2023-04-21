@@ -79,7 +79,7 @@ class LoginActivity : ComponentActivity() {
                             )
                         }
                         DodamMaxWidthButton(text = "DAuth로 로그인하기", modifier = Modifier.padding(horizontal = DodamDimen.ScreenSidePadding)) {
-                            loginWithDodam(
+                            /*loginWithDodam(
                                 context = this@LoginActivity,
                                 onSuccess = { tokenResponse ->
                                     getCode(
@@ -95,7 +95,7 @@ class LoginActivity : ComponentActivity() {
                                 onFailure = { throwable ->
 
                                 }
-                            )
+                            )*/
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
                             startActivity(intent)
                             finish()

@@ -1,6 +1,7 @@
 package com.mooooong.fastwash.features.main.mvi
 
 data class MainState(
+    val isReserved: Boolean? = null,
     val loading: Boolean = false,
 )
 

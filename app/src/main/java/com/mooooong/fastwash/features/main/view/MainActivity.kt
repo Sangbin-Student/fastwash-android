@@ -67,7 +67,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun render(state: MainState) {
+        state.isReserved?.let {
 
+        }
     }
 
     private fun handleSideEffect(sideEffect: MainSideEffect) {

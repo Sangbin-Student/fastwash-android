@@ -10,8 +10,9 @@ import com.mooooong.fastwash.features.reserve.view.ReserveScreen
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
+    isReserve: Boolean,
 ) {
-    NavHost(navController = navController, startDestination = NavGroup.Washing.RESERVE) {
+    NavHost(navController = navController, startDestination = if (isReserve) NavGroup.Washing.RESERVE else NavGroup.Washing.ASSIGN) {
 
         composable(NavGroup.Washing.ASSIGN) {
             AssignScreen(navController = navController)

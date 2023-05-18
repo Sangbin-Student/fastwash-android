@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "reserve_table")
 data class ReserveEntity(
     @PrimaryKey val id: Int = 0,
-    val time: String?,
+    val time: String,
 )

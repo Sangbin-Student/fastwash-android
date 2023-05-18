@@ -10,7 +10,7 @@ import com.mooooong.fastwash.local.entity.ReserveEntity
 interface ReserveDao {
 
     @Query("SELECT * FROM reserve_table")
-    suspend fun getIsReserve(): ReserveEntity
+    suspend fun getIsReserve(): ReserveEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIsReserve(reserveEntity: ReserveEntity)

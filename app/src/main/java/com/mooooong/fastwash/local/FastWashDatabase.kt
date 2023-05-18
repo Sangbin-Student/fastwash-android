@@ -9,7 +9,7 @@ import com.mooooong.fastwash.local.entity.ReserveEntity
 
 @Database(
     entities = [ReserveEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class FastWashDatabase : RoomDatabase() {

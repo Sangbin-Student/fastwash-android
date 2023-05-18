@@ -10,6 +10,7 @@ import com.mooooong.fastwash.network.RetrofitClient
 import com.mooooong.fastwash.network.request.AssignBluetoothIdRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
+import javax.inject.Inject
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -17,7 +18,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 
 @HiltViewModel
-class MainViewModel : ContainerHost<MainState, MainSideEffect>, ViewModel() {
+class MainViewModel @Inject constructor() : ContainerHost<MainState, MainSideEffect>, ViewModel() {
 
     override val container = container<MainState, MainSideEffect>(MainState())
 
@@ -40,21 +41,28 @@ class MainViewModel : ContainerHost<MainState, MainSideEffect>, ViewModel() {
         kotlin.runCatching {
             reserveDao.getIsReserve()
         }.onSuccess {
-            if (it.time == LocalDate.now().toString()) {
-                // 지난 시간 저장이 현재 날짜와 같은 경우.. -> 예약이 되어 있는 경우
-                reduce {
-                    state.copy(
-                        isReserved = true
-                    )
+            it?.let {
+                if (it.time == LocalDate.now().toString()) {
+                    // 지난 시간 저장이 현재 날짜와 같은 경우.. -> 예약이 되어 있는 경우
+                    reduce {
+                        state.copy(
+                            isReserved = true
+                        )
+                    }
+                } else {
+                    // 예약이 되어 있지 않는 경우
+                    reduce {
+                        state.copy(
+                            isReserved = false
+                        )
+                    }
                 }
-            } else {
-                // 예약이 되어 있지 않는 경우
-                reduce {
-                    state.copy(
-                        isReserved = false
-                    )
-                }
+            } ?: reduce {
+                state.copy(
+                    isReserved = false
+                )
             }
+
         }.onFailure {
             postSideEffect(MainSideEffect.OnFailEvent(it))
         }

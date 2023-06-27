@@ -2,11 +2,13 @@ package com.mooooong.fastwash.features.auth.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -63,6 +65,7 @@ class LoginActivity : ComponentActivity() {
                         Column(
                             modifier = Modifier
                                 .weight(1f)
+                                .fillMaxWidth()
                                 .padding(horizontal = DodamDimen.ScreenSidePadding)
                         ) {
                             Spacer(modifier = Modifier.height(70.dp))
@@ -72,35 +75,25 @@ class LoginActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(90.dp))
                             LottieAnimation(
                                 modifier = Modifier
-                                    .size(400.dp)
+                                    .size(600.dp)
                                     .align(Alignment.CenterHorizontally),
                                 composition = composition,
                                 progress = { progress },
                             )
                         }
                         DodamMaxWidthButton(text = "DAuth로 로그인하기", modifier = Modifier.padding(horizontal = DodamDimen.ScreenSidePadding)) {
-                            /*loginWithDodam(
+                            loginWithDodam(
                                 context = this@LoginActivity,
                                 onSuccess = { tokenResponse ->
-                                    getCode(
-                                        context = this@LoginActivity,
-                                        onSuccess = { code ->
-
-                                        },
-                                        onFailure = { throwable ->
-
-                                        }
-                                    )
+                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
                                 },
                                 onFailure = { throwable ->
-
+                                    Toast.makeText(this@LoginActivity, "로그인에 실패했습니다", Toast.LENGTH_SHORT).show()
                                 }
-                            )*/
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            )
                         }
-
                         Spacer(modifier = Modifier.height(50.dp))
                     }
                 }

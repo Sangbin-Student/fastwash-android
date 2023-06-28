@@ -1,5 +1,7 @@
 package com.mooooong.fastwash.features.reserve.view
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,6 +47,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.mooooong.fastwash.R
+import com.mooooong.fastwash.features.reserve.mvi.ReserveSideEffect
 import com.mooooong.fastwash.features.reserve.vm.ReserveViewModel
 import kotlinx.coroutines.launch
 import kr.hs.dgsw.smartschool.components.modifier.dodamClickable
@@ -53,6 +57,8 @@ import kr.hs.dgsw.smartschool.components.theme.Headline1
 import kr.hs.dgsw.smartschool.components.theme.Label1
 import kr.hs.dgsw.smartschool.components.theme.Title3
 import kr.hs.dgsw.smartschool.components.utlis.DodamDimen
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -60,6 +66,10 @@ fun ReserveScreen(
     navController: NavController,
     reserveViewModel: ReserveViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+
+    val state = reserveViewModel.collectAsState().value
+    reserveViewModel.collectSideEffect { handleSideEffect(context, it) }
 
     val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -123,13 +133,13 @@ fun ReserveScreen(
 
                 Title3(text = "세탁기")
                 Spacer(modifier = Modifier.height(3.dp))
-                Label1(text = "[5층] 좌측 세면실 1번")
+                Label1(text = state.washer?.name ?: "")
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Title3(text = "시간대")
                 Spacer(modifier = Modifier.height(3.dp))
-                Label1(text = "오후 9시 20분 ~ 9시 30분")
+                Label1(text = state.time)
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -138,7 +148,7 @@ fun ReserveScreen(
                 LazyColumn(
                     contentPadding = PaddingValues(horizontal = 5.dp)
                 ) {
-                    items(listOf("이승민", "강성훈", "한상빈", "최민재")) {
+                    items(state.users) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -148,7 +158,7 @@ fun ReserveScreen(
                                     .background(color = Color.Black, shape = CircleShape)
                             )
                             Spacer(modifier = Modifier.width(5.dp))
-                            Body1(text = it)
+                            Body1(text = it.name)
                         }
                     }
                 }
@@ -172,6 +182,14 @@ fun ReserveScreen(
             }
 
             Spacer(modifier = Modifier.height(50.dp))
+        }
+    }
+}
+
+private fun handleSideEffect(context: Context, sideEffect: ReserveSideEffect) {
+    when (sideEffect) {
+        is ReserveSideEffect.OnFailEvent -> {
+            Toast.makeText(context, sideEffect.throwable.message, Toast.LENGTH_SHORT).show()
         }
     }
 }

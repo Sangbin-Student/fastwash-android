@@ -7,12 +7,13 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface WasherService {
 
     @GET("washers")
     suspend fun getWashers(
-        page: Int,
+        @Query("page") page: Int,
     ): GetWasherResponse
 
     @GET("washers/{washer-id}")

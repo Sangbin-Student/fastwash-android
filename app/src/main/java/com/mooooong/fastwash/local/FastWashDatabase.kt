@@ -11,7 +11,7 @@ import com.mooooong.fastwash.local.entity.TokenEntity
 
 @Database(
     entities = [ReserveEntity::class, TokenEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 abstract class FastWashDatabase : RoomDatabase() {

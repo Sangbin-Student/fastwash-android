@@ -5,5 +5,6 @@ data class LoginState(
 )
 
 sealed class LoginSideEffect {
-    data class ShowException(val exception: Throwable): LoginSideEffect()
+    data class OnFailEvent(val exception: Throwable) : LoginSideEffect()
+    object OnSuccessLoginEvent : LoginSideEffect()
 }

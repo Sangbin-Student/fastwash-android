@@ -1,6 +1,8 @@
 package com.mooooong.fastwash.network
 
 import com.mooooong.fastwash.network.service.AssignmentService
+import com.mooooong.fastwash.network.service.AuthService
+import com.mooooong.fastwash.network.service.WasherService
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,6 +15,8 @@ object RetrofitClient {
     private val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     val assignmentService: AssignmentService
+    val authService: AuthService
+    val washerService: WasherService
 
     private val okhttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
@@ -29,5 +33,7 @@ object RetrofitClient {
 
     init {
         assignmentService = retrofit.create(AssignmentService::class.java)
+        authService = retrofit.create(AuthService::class.java)
+        washerService = retrofit.create(WasherService::class.java)
     }
 }

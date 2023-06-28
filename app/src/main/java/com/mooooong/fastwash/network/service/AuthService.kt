@@ -10,4 +10,9 @@ interface AuthService {
     suspend fun signIn(
         @Query("code") code: String,
     ): AuthResponse
+
+    @POST("auth/sign-in-token")
+    suspend fun signInToken(
+        @Query("accessToken") accessToken: String,
+    ): AuthResponse
 }

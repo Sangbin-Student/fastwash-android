@@ -5,6 +5,7 @@ import com.mooooong.fastwash.network.response.WasherResponse
 
 data class ReserveState(
     val isGetMyAssignLoading: Boolean = false,
+    val enableOpen: Boolean = true,
     val seed: Int = 0,
     val time: String = "",
     val users: List<UserResponse> = emptyList(),
@@ -13,4 +14,5 @@ data class ReserveState(
 
 sealed class ReserveSideEffect {
     data class OnFailEvent(val throwable: Throwable) : ReserveSideEffect()
+    object SuccessSendDeviceName : ReserveSideEffect()
 }

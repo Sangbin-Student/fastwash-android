@@ -1,9 +1,11 @@
 package com.mooooong.fastwash.features.reserve.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.mooooong.fastwash.features.reserve.mvi.ReserveSideEffect
 import com.mooooong.fastwash.features.reserve.mvi.ReserveState
 import com.mooooong.fastwash.network.RetrofitClient
+import com.mooooong.fastwash.network.request.AssignBluetoothIdRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import org.orbitmvi.orbit.Container
@@ -41,12 +43,33 @@ class ReserveViewModel @Inject constructor() : ContainerHost<ReserveState, Reser
                 )
             }
         }.onFailure {
+            Log.d("AssignTest", "${it.message}")
+            if (it.message == "No such assignment")
+                reduce {
+                    state.copy(enableOpen = false)
+                }
+            else
+                reduce {
+                    state.copy(enableOpen = true)
+                }
             postSideEffect(ReserveSideEffect.OnFailEvent(it))
             reduce {
                 state.copy(
                     isGetMyAssignLoading = false
                 )
             }
+        }
+    }
+
+    fun sendDeviceName(deviceName: String) = intent {
+        kotlin.runCatching {
+            RetrofitClient.assignmentService.assignBluetoothId(
+                AssignBluetoothIdRequest(deviceName)
+            )
+        }.onSuccess {
+            postSideEffect(ReserveSideEffect.SuccessSendDeviceName)
+        }.onFailure {
+            postSideEffect(ReserveSideEffect.OnFailEvent(it))
         }
     }
 }

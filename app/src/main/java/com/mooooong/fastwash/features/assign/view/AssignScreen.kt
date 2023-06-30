@@ -64,7 +64,7 @@ fun AssignScreen(
     val state = assignViewModel.collectAsState().value
     assignViewModel.collectSideEffect { handleSideEffect(navController, context, it) }
 
-    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
 
     val laundryTime = listOf(
         LaundryTime("오전 8시 00분", "08:00"),
@@ -211,7 +211,6 @@ fun AssignScreen(
                         }
                     }
                 }
-                // bluetoothAdapter.name
             }
             Button(
                 modifier = Modifier

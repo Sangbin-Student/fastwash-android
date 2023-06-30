@@ -1,5 +1,7 @@
 package com.mooooong.fastwash.features.reserve.view
 
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -54,12 +56,14 @@ import kr.hs.dgsw.smartschool.components.modifier.dodamClickable
 import kr.hs.dgsw.smartschool.components.theme.Body1
 import kr.hs.dgsw.smartschool.components.theme.DodamTheme
 import kr.hs.dgsw.smartschool.components.theme.Headline1
+import kr.hs.dgsw.smartschool.components.theme.Headline2
 import kr.hs.dgsw.smartschool.components.theme.Label1
 import kr.hs.dgsw.smartschool.components.theme.Title3
 import kr.hs.dgsw.smartschool.components.utlis.DodamDimen
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReserveScreen(
@@ -82,106 +86,129 @@ fun ReserveScreen(
         iterations = LottieConstants.IterateForever
     )
 
-    BottomDrawer(
-        modifier = Modifier.fillMaxWidth(),
-        drawerState = drawerState,
-        drawerShape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp),
-        drawerContent = {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close",
-                modifier = Modifier
-                    .padding(top = 16.dp, end = 16.dp)
-                    .size(25.dp)
-                    .align(Alignment.End)
-                    .dodamClickable(rippleEnable = false) {
-                        scope.launch { drawerState.close() }
-                    }
+    if (state.enableOpen.not()) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Headline2(
+                text = "아직 배정되지 않았아요!\n조금만 기다려주세요.",
+                modifier = Modifier.align(Alignment.Center),
+                textAlign = TextAlign.Center,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Headline1(text = "Discovery", textColor = Color(0xFF3784F6), modifier = Modifier.align(Alignment.CenterHorizontally))
-
-            Spacer(modifier = Modifier.height(30.dp))
-            LottieAnimation(
-                modifier = Modifier
-                    .size(200.dp)
-                    .align(Alignment.CenterHorizontally),
-                composition = composition,
-                progress = { progress },
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            Body1(text = "스마트폰을 키오스크 가까이\n가져다 대면 인식됩니다", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-            Spacer(modifier = Modifier.height(15.dp))
         }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
+    } else {
+        BottomDrawer(
+            modifier = Modifier.fillMaxWidth(),
+            drawerState = drawerState,
+            drawerShape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp),
+            drawerContent = {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    modifier = Modifier
+                        .padding(top = 16.dp, end = 16.dp)
+                        .size(25.dp)
+                        .align(Alignment.End)
+                        .dodamClickable(rippleEnable = false) {
+                            scope.launch { drawerState.close() }
+                        }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Headline1(
+                    text = "Discovery",
+                    textColor = Color(0xFF3784F6),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
+                Spacer(modifier = Modifier.height(30.dp))
+                LottieAnimation(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally),
+                    composition = composition,
+                    progress = { progress },
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                Body1(
+                    text = "스마트폰을 키오스크 가까이\n가져다 대면 인식됩니다",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+            }
         ) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = DodamDimen.ScreenSidePadding)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
             ) {
-                Spacer(modifier = Modifier.height(70.dp))
-                Text(
-                    text = "배정된 세탁기",
-                    style = DodamTheme.typography.headline1.copy(fontWeight = FontWeight.Bold)
-                )
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Title3(text = "세탁기")
-                Spacer(modifier = Modifier.height(3.dp))
-                Label1(text = state.washer?.name ?: "")
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Title3(text = "시간대")
-                Spacer(modifier = Modifier.height(3.dp))
-                Label1(text = state.time)
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Title3(text = "새탁 크루")
-                Spacer(modifier = Modifier.height(3.dp))
-                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 5.dp)
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = DodamDimen.ScreenSidePadding)
                 ) {
-                    items(state.users) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Spacer(modifier = Modifier.width(5.dp))
-                            Box(
-                                modifier = Modifier.size(4.dp)
-                                    .background(color = Color.Black, shape = CircleShape)
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
-                            Body1(text = it.name)
+                    Spacer(modifier = Modifier.height(70.dp))
+                    Text(
+                        text = "배정된 세탁기",
+                        style = DodamTheme.typography.headline1.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    Title3(text = "세탁기")
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Label1(text = state.washer?.name ?: "")
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Title3(text = "시간대")
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Label1(text = state.time)
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Title3(text = "새탁 크루")
+                    Spacer(modifier = Modifier.height(3.dp))
+                    LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 5.dp)
+                    ) {
+                        items(state.users) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Spacer(modifier = Modifier.width(5.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .size(4.dp)
+                                        .background(color = Color.Black, shape = CircleShape)
+                                )
+                                Spacer(modifier = Modifier.width(5.dp))
+                                Body1(text = it.name)
+                            }
                         }
                     }
                 }
-            }
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = DodamDimen.ScreenSidePadding),
-                onClick = { scope.launch { drawerState.open() } },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CE2BE)),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp
-                )
-            ) {
-                Text(
-                    text = "세탁기 문 열기",
-                    color = DodamTheme.color.White,
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                )
-            }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DodamDimen.ScreenSidePadding),
+                    onClick = {
+                        scope.launch { drawerState.open() }
+                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                        reserveViewModel.sendDeviceName(bluetoothAdapter.name)
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CE2BE)),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp
+                    )
+                ) {
+                    Text(
+                        text = "세탁기 문 열기",
+                        color = DodamTheme.color.White,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                    )
+                }
 
-            Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(50.dp))
+            }
         }
     }
 }
@@ -190,6 +217,9 @@ private fun handleSideEffect(context: Context, sideEffect: ReserveSideEffect) {
     when (sideEffect) {
         is ReserveSideEffect.OnFailEvent -> {
             Toast.makeText(context, sideEffect.throwable.message, Toast.LENGTH_SHORT).show()
+        }
+        is ReserveSideEffect.SuccessSendDeviceName -> {
+            Toast.makeText(context, "블루투스 연결에 성공했어요", Toast.LENGTH_SHORT).show()
         }
     }
 }
